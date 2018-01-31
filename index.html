@@ -71,7 +71,12 @@ $(document).on("click", ".gif", function(){
     })
       .done(function(response){
         var results = response.data;
-        console.log(results);
+        for (var i = 0; i < results.length; i++) {
+          var gifImage = $("<img>");
+          gifImage.attr("src", results[i].images.fixed_height.url);
+          gif
+
+        }
       })
   });  
   </script>
