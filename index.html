@@ -15,12 +15,14 @@
           <div id="imageBtns"></div>
         </div>
       </div>
+      <br>
+      <br>
       <div class="row">
         <form>
           <div class="form-group">
             <label for="text-submission">Add Giphy:</label>
             <input type="text" class="form=control" id="textInput" placeholder="Type Here">
-            <button type="submit" class="btn btn-default" id="submitBtn">Submit</button>
+            <input type="submit" class="btn btn-default" id="submitBtn" value="Submit">
           </div>
         </form>
       </div>
@@ -31,48 +33,47 @@
   </div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
+// Create variable to hold array for buttons
     var giphy =[];
 
-      function renderButtons(){
-        $("#imageBtns").empty();
-        for (var i = 0; i < giphy.length; i++) {
-          var a = $('<button>');
-          a.addClass("gif");
-          a.attr("data-name", giphy[i]);
-          a.text(giphy[i]);
-          $("#imageBtns").append(a);
-        }
+// Dynamically create buttons for entered topics
+    function renderButtons(){
+      $("#imageBtns").empty();
+      for (var i = 0; i < giphy.length; i++) {
+        var a = $('<button>');
+        a.addClass("gif");
+        a.attr("data-name", giphy[i]);
+        a.text(giphy[i]);
+        $("#imageBtns").append(a);
       }
+    }
+// Create event listener to gather user input and run function (renderButtons)
+    $("#submitBtn").on("click", function(event) {
+      event.preventDefault();
+      var item = $("#textInput").val().trim();
+      giphy.push(item);
+      renderButtons()
+      $("#textInput").text("")
+    });
 
-      $("#submitBtn").on("click", function(event) {
-        event.preventDefault();
-        var item = $("#textInput").val().trim();
-        giphy.push(item);
-        renderButtons()
-        $("#textInput").text("")
-      });
+    // renderButtons();
 
-      renderButtons();
+// Create variable that holds selected topic
+  
+$(document).on("click", ".gif", function(){
+    var topic = $(this).attr("data-name");
 
-    $(".gif").on("click", function(){
-      var queryURL = "https://api.giphy.com/v1/gifs/search?q="+ selected +"&api_key=6HFBZ9O2fWiOU6E12y8EdeAV7zFQxOHA&limit=10";
-      var selected = $(".data-name").val();
-      console.log(selected)
+    queryURL = "https://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=6HFBZ9O2fWiOU6E12y8EdeAV7zFQxOHA&limit=10&rating=g";
 
-      $.ajax({
+    $.ajax({
       url: queryURL,
-      method: 'GET'
+      method: "GET"
+    })
+      .done(function(response){
+        var results = response.data;
+        console.log(results);
       })
-    
-      .done(function(response) {
-        console.log(response);
-        var imageURL = response.data[0].images.original.url;
-        var image = $('<img>');
-        image.attr("src", imageURL);
-        image.attr("alt", "image");
-        $("#images").prepend(image);
-      });
-    })     
+  });  
   </script>
     
 </body>
